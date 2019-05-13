@@ -7,7 +7,7 @@ Manage lifecycle for the Chalice service integration lightning talk.
 import argparse
 import logging
 import logging.config
-from json import dumps, loads
+from json import dump, dumps, loads
 from subprocess import CalledProcessError, run
 
 import yaml
@@ -115,6 +115,7 @@ def create_ssm_param(args):
                                                     }
                                                 ]
                                                )
+                logging.info('SSM parameter "%s" updated', args.phone_num_name)
         else:
             logging.error('Unable to create SSM parameter! %s', err.response['Error'])
             raise
@@ -164,7 +165,8 @@ def update_chalice_config(args, delete_flag=False):
 
         # Write config
         with open('{}/.chalice/config.json'.format(args.chalice_app_dir), 'w') as config_fh:
-            config_fh.write(dumps(config))
+            dump(config, config_fh, indent="\t")
+            config_fh.write('\n')
         logging.debug('Chalice config after: %s', dumps(config))
     except Exception as err:
         logging.error('Unable to update Chalice config! %s', err)
@@ -188,7 +190,7 @@ def chalice_command(args, action='deploy'):
         raise
 
 
-def create(arguments):
+def deploy(arguments):
     """Create resources required for Chalice demo."""
     logging.info('Deploying Chalice app...')
     create_s3_bucket(arguments)
@@ -211,7 +213,8 @@ def delete(arguments):
 def parse_arguments():
     """Parse arguments."""
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--action', required=True, help='create or delete')
+    argparser.add_argument('--action', required=True, choices=['deploy', 'delete'],
+                           help='deploy or delete')
     argparser.add_argument('--s3-bucket', required=True,
                            help='Name of S3 bucket for image uploads.')
     argparser.add_argument('--phone-number-parameter-name', required=True, dest='phone_num_name',
