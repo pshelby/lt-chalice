@@ -143,6 +143,17 @@ def delete_ssm_param(args):
             raise
 
 
+def change_log_retention(group='/aws/lambda/lt-chalice-dev-image_upload_handler', days=1):
+    """Modifies retention policy for log group lambda created."""
+    try:
+        logs_client = boto3.client('logs')
+        logs_client.put_retention_policy(logGroupName=group, retentionInDays=days)
+        logging.info('Log retention updated to %d day(s)', days)
+    except ClientError as err:
+        logging.error('Unable to change retention policy of log group! %s', err)
+        raise
+
+
 def update_chalice_config(args, delete_flag=False):
     """Update config.json with values."""
     try:
@@ -205,6 +216,7 @@ def delete(arguments):
     logging.info('Deleting Chalice app...')
     chalice_command(arguments, action='delete')
     update_chalice_config(arguments, delete_flag=True)
+    change_log_retention()
     delete_ssm_param(arguments)
     delete_s3_bucket(arguments)
     logging.info('Complete')
