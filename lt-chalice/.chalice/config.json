@@ -1,0 +1,14 @@
+{
+	"version": "2.0",
+	"app_name": "lt-chalice",
+	"autogen_policy": false,
+	"stages": {
+		"dev": {
+			"api_gateway_stage": "api"
+		}
+	},
+	"environment_variables": {
+		"PHONE_NUM_PARAM": "",
+		"S3_BUCKET": ""
+	}
+}
