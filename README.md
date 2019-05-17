@@ -10,14 +10,15 @@ For this demo you'll need:
 ## Usage
 
 ```bash
-usage: manage_app.py [-h] --action ACTION --s3-bucket S3_BUCKET
+usage: manage_app.py [-h] --action {deploy,delete} --s3-bucket S3_BUCKET
                      --phone-number-parameter-name PHONE_NUM_NAME
                      [--phone-number-parameter-value PHONE_NUM_VALUE]
                      [--chalice-app-dir CHALICE_APP_DIR] [--region REGION]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --action ACTION       create or delete
+  --action {deploy,delete}
+                        deploy or delete
   --s3-bucket S3_BUCKET
                         Name of S3 bucket for image uploads.
   --phone-number-parameter-name PHONE_NUM_NAME
@@ -31,27 +32,27 @@ optional arguments:
                         Directory of Chalice app to deploy (Default: "lt-
                         chalice").
   --region REGION       Region in which to deploy resources (Default: "us-
-                        east-2").
+                        west-2").
 ```
 
 ## Running
 
-The `manage-app.py` script will handle all prerequisite setup and deployment of the Chalice app for you.  Simply supply the required arguments with the `--create` action.
+The `manage-app.py` script will handle all prerequisite setup and deployment of the Chalice app for you.  Simply supply the required arguments with the `deploy` action.
 
 ```bash
-% ./manage_app.py --action create --s3-bucket pshelby-lt-chalice-west --phone-number-parameter-name /lt-chalice/pshelby/phone-num --phone-number-parameter-value +1XXXXXXXXXX --chalice-app-dir ./lt-chalice
-2019-05-01 14:00:07,448 - INFO - create - Deploying Chalice app...
-2019-05-01 14:00:08,866 - INFO - create_s3_bucket - S3 bucket "pshelby-lt-chalice-west" created
-2019-05-01 14:00:10,170 - INFO - create_ssm_param - SSM parameter "/lt-chalice/pshelby/phone-num" created
-2019-05-01 14:00:24,358 - INFO - chalice_command - deploy
+% ./manage_app.py --action deploy --s3-bucket pshelby-lt-chalice-west --phone-number-parameter-name /lt-chalice/pshelby/phone-num --phone-number-parameter-value +1XXXXXXXXXX --chalice-app-dir ./lt-chalice
+2019-05-17 09:53:57,213 - INFO - deploy - Deploying Chalice app...
+2019-05-17 09:53:58,772 - INFO - create_s3_bucket - S3 bucket "pshelby-lt-chalice-west" created
+2019-05-17 09:54:00,209 - INFO - create_ssm_param - SSM parameter "/lt-chalice/pshelby/phone-num" created
+2019-05-17 09:54:14,664 - INFO - chalice_command - deploy
 Creating deployment package.
-Creating IAM role: lt-chalice-dev-recognize_faces
-Creating lambda function: lt-chalice-dev-recognize_faces
-Configuring S3 events in bucket pshelby-lt-chalice-west to function lt-chalice-dev-recognize_faces
+Creating IAM role: lt-chalice-dev-image_upload_handler
+Creating lambda function: lt-chalice-dev-image_upload_handler
+Configuring S3 events in bucket pshelby-lt-chalice-west to function lt-chalice-dev-image_upload_handler
 Resources deployed:
-  - Lambda ARN: arn:aws:lambda:us-west-2:XXXXXXXXXXXX:function:lt-chalice-dev-recognize_faces
+  - Lambda ARN: arn:aws:lambda:us-west-2:XXXXXXXXXXXX:function:lt-chalice-dev-image_upload_handler
 
-2019-05-01 14:00:24,358 - INFO - create - Complete
+2019-05-17 09:54:14,664 - INFO - deploy - Complete
 %
 ```
 

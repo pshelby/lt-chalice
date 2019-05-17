@@ -10,7 +10,7 @@ import boto3
 from botocore.exceptions import ClientError
 from chalice import Chalice
 
-app = Chalice(app_name='lt-chalice')
+app = Chalice(app_name='lt-chalice') # pylint: disable=C0103
 app.log.setLevel(INFO)
 
 PHONE_NUM_PARAM = environ['PHONE_NUM_PARAM']
